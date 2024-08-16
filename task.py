@@ -66,6 +66,14 @@ def main():
                     else: 
                         print("Invalid request: ", args)
                         print("Provide an id number for task")
+            elif args[0] == "delete":
+                if len(args) !=2: 
+                    print("Invalid request: ", args)
+                else:
+                    if args[1].isdigit():
+                        task_delete(l, int(args[1]))
+                    else: 
+                        print("Provide an id number for task")
     else: 
         print("No argument passed. \nTry:", actions)
 def id_counter(tasks):
@@ -162,6 +170,20 @@ def task_update(tasks, id, desc):
     if not valid_id: 
         print("Invalid id. Try again")
     else: 
+        with open(path_w, "w") as json_file:
+            json.dump(updated_list, json_file)
+def task_delete(tasks, id):
+    todo = tasks["todo"]
+    valid_id = False
+    updated_list = {"todo" : []}
+    for t in todo:
+        if t["id"] == id:
+            valid_id = True
+        else: 
+            updated_list["todo"].append(t)
+    if not valid_id:
+        print("Invalid id. Try again")
+    else:
         with open(path_w, "w") as json_file:
             json.dump(updated_list, json_file)
 if __name__ == "__main__":
