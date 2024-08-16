@@ -57,6 +57,15 @@ def main():
                          else: 
                              print("Invalid request: ", args)
                              print("Provide an id number for task")
+            elif args[0] == "update":
+                if len(args) != 3:
+                    print("Invalid request: ", args)
+                else: 
+                    if args[1].isdigit():
+                        task_update(l, int(args[1]), args[2])
+                    else: 
+                        print("Invalid request: ", args)
+                        print("Provide an id number for task")
     else: 
         print("No argument passed. \nTry:", actions)
 def id_counter(tasks):
@@ -135,6 +144,23 @@ def taskmark(tasks, mark, id):
         print("Invalid id. Try again")
     elif not valid: 
         pass
+    else: 
+        with open(path_w, "w") as json_file:
+            json.dump(updated_list, json_file)
+def task_update(tasks, id, desc):
+    todo = tasks["todo"]
+    updated_list = {"todo":[]}
+    valid_id = False 
+    for t in todo:
+        if t["id"] == id:
+            valid_id = True
+            t["description"] = desc
+            dt = datetime.datetime.now(timezone.utc)
+            dt = dt.strftime("%m/%d/%Y %H:%M:%S")
+            t["updatedAt"] = dt 
+        updated_list["todo"].append(t)
+    if not valid_id: 
+        print("Invalid id. Try again")
     else: 
         with open(path_w, "w") as json_file:
             json.dump(updated_list, json_file)
