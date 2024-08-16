@@ -44,6 +44,19 @@ def main():
                         print("Invalid request: ", args)
                 else: 
                     print("Invalid request:", args)
+            elif args[0] == "mark": 
+                 if len(args) != 3:
+                     print("Invalid request: ", args)
+                 else:
+                     if args[1] != "done" and args[1] != "in-progress":
+                        print("Invalid request: ", args)
+                        print("Task can be marked in-progress or done")
+                     else: 
+                         if args[2].isdigit(): 
+                             taskmark(l, args[1], int(args[2])) 
+                         else: 
+                             print("Invalid request: ", args)
+                             print("Provide an id number for task")
     else: 
         print("No argument passed. \nTry:", actions)
 def id_counter(tasks):
@@ -100,6 +113,31 @@ def tasklist(tasks, status= "all"):
                 print("No tasks marked with status " + status)
     else: 
         print('no current todo list, try adding a task')
+
+def taskmark(tasks, mark, id):
+    todo = tasks["todo"]
+    updated_list = {"todo":[]}
+    valid_id = False
+    valid = False
+    for t in todo:
+        if t["id"] == id: 
+            valid_id = True
+            if t["status"] == mark:
+                print('task mark is already', mark)
+            else:
+                valid = True
+                t["status"] = mark
+                dt = datetime.datetime.now(timezone.utc)
+                dt = dt.strftime("%m/%d/%Y, %H:%M:%S")
+                t["updatedAt"] = dt
+        updated_list["todo"].append(t)
+    if not valid_id:
+        print("Invalid id. Try again")
+    elif not valid: 
+        pass
+    else: 
+        with open(path_w, "w") as json_file:
+            json.dump(updated_list, json_file)
 if __name__ == "__main__":
     main()
     
